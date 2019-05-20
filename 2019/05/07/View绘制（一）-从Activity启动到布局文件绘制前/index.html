@@ -79,20 +79,18 @@
 
 
 
-<meta name="description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。  ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWin">
+<meta name="description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。 ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWind">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="View绘制(一)—从Activity启动到布局文件绘制前">
 <meta property="og:url" content="http://yoursite.com/2019/05/07/View绘制（一）-从Activity启动到布局文件绘制前/index.html">
 <meta property="og:site_name" content="Beecool7&#39;s Blog">
-<meta property="og:description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。  ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWin">
+<meta property="og:description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。 ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWind">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/Users/beecool7/Desktop/屏幕快照%202019-05-20%20下午2.59.28.png">
-<meta property="og:updated_time" content="2019-05-20T08:24:55.532Z">
+<meta property="og:updated_time" content="2019-05-20T08:27:13.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View绘制(一)—从Activity启动到布局文件绘制前">
-<meta name="twitter:description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。  ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWin">
-<meta name="twitter:image" content="http://yoursite.com/Users/beecool7/Desktop/屏幕快照%202019-05-20%20下午2.59.28.png">
+<meta name="twitter:description" content="1. 基础理论1.1 视图层级​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。 ​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWind">
 
 
 
@@ -323,7 +321,6 @@
 
       
         <h3 id="1-基础理论"><a href="#1-基础理论" class="headerlink" title="1. 基础理论"></a>1. 基础理论</h3><h4 id="1-1-视图层级"><a href="#1-1-视图层级" class="headerlink" title="1.1 视图层级"></a>1.1 视图层级</h4><p>​        在分析视图的测绘前，我们需要大致知道在activity启动到视图绘制之前这段过程，系统都做了那些准备。下面这张图中：左边展示的是Activity的视图层级，右边展示的是DecorView的视图树。</p>
-<p><img src="/Users/beecool7/Desktop/屏幕快照 2019-05-20 下午2.59.28.png" alt="屏幕快照 2019-05-20 下午2.59.28"></p>
 <p>​        如上左图所示，Activity视图构成包括最外层的Activity，Activity内部有一Window成员，其实例为PhoneWindow；PhoneWindow有一内部类DecorView。DecorView可以理解为整个页面的根View，如上右图所示，DecorView是一个FrameLayout，包含两个子View，一个id=statusBarBackground的View和一个是ViewRoot。id=statusBarBackground的View，可以简单理解为了设置statusBar的；而这个ViewRoot比较重要，它包含一个Header和一个ContentView，Header其实就是TitleBar或者ActionBar，ContentView是一个FrameLayout，包含一个唯一子View —— subDecor。我们写的布局通过setContenView()加入到subDecor中id为content的View中，成为它的一个子View。(上述中的ViewRoot，Header、ContentView、subDecor、ActionBar都是我自己定义的名字，为了方便理解)</p>
 <h4 id="1-2-Window"><a href="#1-2-Window" class="headerlink" title="1.2 Window"></a>1.2 Window</h4><p>​        Window即窗口，这个概念在Android Framework中的实现为android.view.Window这个抽象类，这个抽象类是对Android系统中的窗口的抽象。在介绍这个类之前，我们先来看看究竟什么是窗口呢？</p>
 <p>实际上，窗口是一个宏观的思想，它是屏幕上用于绘制各种UI元素及响应用户输入事件的一个矩形区域。通常具备以下两个特点：</p>
